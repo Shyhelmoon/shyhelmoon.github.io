@@ -144,11 +144,6 @@
     </style>
 </head>
 
-<div id="lightbox" style="display:none;">
-    <span id="lightbox-close">&times;</span>
-    <img id="lightbox-img" src="" alt="">
-</div>
-
 
 <body>
     <div class="container">
@@ -192,6 +187,14 @@
             <img src="images/screenshot9.JPG" alt="A checkpoint, complete with healing stations.">
         </div>
     </div>
+
+    <div id="lightbox" style="display:none;">
+        <span id="lightbox-close">&times;</span>
+        <span id="lightbox-prev">&#10094;</span>
+        <span id="lightbox-next">&#10095;</span>
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
 
     <script>
         const lightbox = document.getElementById('lightbox');
@@ -237,7 +240,7 @@
             }
         });
     
-        // Optional: keyboard navigation
+        
         document.addEventListener('keydown', (e) => {
             if (lightbox.style.display === 'flex') {
                 if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
@@ -251,12 +254,6 @@
     </script>
 
 
-    <div id="lightbox" style="display:none;">
-        <span id="lightbox-close">&times;</span>
-        <span id="lightbox-prev">&#10094;</span>
-        <span id="lightbox-next">&#10095;</span>
-        <img id="lightbox-img" src="" alt="">
-    </div>
 
 </body>
 </html>
