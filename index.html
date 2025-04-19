@@ -93,11 +93,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            flex-direction: column;
         }
 
         #lightbox img {
@@ -107,14 +108,35 @@
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
         }
 
-        #lightbox-close {
+        #lightbox-close,
+        #lightbox-prev,
+        #lightbox-next {
             position: absolute;
-            top: 30px;
-            right: 40px;
             font-size: 3rem;
             color: #00ffd5;
             cursor: pointer;
             z-index: 1001;
+            user-select: none;
+        }
+
+        #lightbox-close {
+            top: 30px;
+            right: 40px;
+        }
+
+        #lightbox-prev,
+        #lightbox-next {
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 10px;
+        }
+
+        #lightbox-prev {
+            left: 40px;
+        }
+
+        #lightbox-next {
+            right: 40px;
         }
 
 
@@ -175,11 +197,23 @@
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
     
-        document.querySelectorAll('.screenshot-grid img').forEach(img => {
+        const thumbnails = document.querySelectorAll('.screenshot-grid img');
+        let currentIndex = 0;
+    
+        function showImage(index) {
+            if (index < 0) index = thumbnails.length - 1;
+            if (index >= thumbnails.length) index = 0;
+            currentIndex = index;
+            lightboxImg.src = thumbnails[currentIndex].src;
+            lightbox.style.display = 'flex';
+        }
+    
+        thumbnails.forEach((img, index) => {
             img.addEventListener('click', () => {
-                lightboxImg.src = img.src;
-                lightbox.style.display = 'flex';
+                showImage(index);
             });
         });
     
@@ -188,15 +222,41 @@
             lightboxImg.src = '';
         });
     
-        // Optional: close lightbox on background click
+        lightboxPrev.addEventListener('click', () => {
+            showImage(currentIndex - 1);
+        });
+    
+        lightboxNext.addEventListener('click', () => {
+            showImage(currentIndex + 1);
+        });
+    
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
                 lightbox.style.display = 'none';
                 lightboxImg.src = '';
             }
         });
+    
+        // Optional: keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+                if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+                if (e.key === 'Escape') {
+                    lightbox.style.display = 'none';
+                    lightboxImg.src = '';
+                }
+            }
+        });
     </script>
 
+
+    <div id="lightbox" style="display:none;">
+        <span id="lightbox-close">&times;</span>
+        <span id="lightbox-prev">&#10094;</span>
+        <span id="lightbox-next">&#10095;</span>
+        <img id="lightbox-img" src="" alt="">
+    </div>
 
 </body>
 </html>
